@@ -1,0 +1,97 @@
+@startuml Inicio
+
+skinparam class {
+BackgroundColor LightGreen
+BorderColor Black
+
+BackgroundColor<<v2>> WhiteSmoke
+BorderColor<<v2>> Black
+
+}
+
+package Complex {
+    package Product {
+        class Product {
+            - code: String|UPC
+            - name
+            - model: Model
+            - state: ProductState
+        }
+
+        class ProductState{
+            - code
+        }
+
+        class Model <<v2>> {
+            - code
+            - brand: Brand
+            - name
+            - family: Family
+        }
+
+        class Brand <<v2>> {
+            - code
+            - name
+        }
+
+        class Item <<v2>> {
+            - product: Product
+            - state: ItemState
+        }
+
+        class SerializedItem{
+            - serial
+        }
+
+        class ItemState{
+            - code
+        }
+
+        class Family{
+            - code
+            - name
+        }
+
+        interface Stock{
+            + getCode()
+            + getProduct(): Product
+            + countByProduct()
+            + countByFamily()
+            + countByFamilyByStore()
+            + countByFProductByStore()
+            + addItem(Item)
+            + takeItem(Item)
+            + reserveItem(Item)
+        }
+
+        class PhysicalStock{
+            - store: Store
+        }
+
+        class FutureStock <<v2>> {
+            - availabilityDate: Datetime
+        }
+
+        class Store {
+            - code
+            - location
+            - capacity
+            + isFull()
+        }
+    
+        '### RELATIONS ###'
+
+   
+        Item --* ItemState
+        class SerializedItem extends Item
+        Stock --* Product
+        Item --* Product
+        Model --* Family
+        Product --* Model
+        PhysicalStock --* Store
+        Model --* Brand
+        class FutureStock implements Stock
+        class PhysicalStock implements Stock
+
+    }
+}
